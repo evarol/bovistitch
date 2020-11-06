@@ -1,4 +1,4 @@
-function dataVolume=vignette_correction(dataVolume,numbins,numiter,templatetype,visual,slice)
+function [dataVolume,vfield,vfield_corrected]=vignette_correction(dataVolume,numbins,numiter,templatetype,visual,slice)
 
 vec=@(x)(x(:));
 if nargin<2
@@ -85,7 +85,8 @@ for k=1:numiter
     end
 end
 
-
+vfield=imgaussfilt(max(dataVolume0,[],3),200);
+vfield_corrected=imgaussfilt(max(dataVolume,[],3),200);
 end
 
 
