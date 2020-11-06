@@ -13,4 +13,6 @@ Run bovistitch.m, select ImarisReader path, and then select the ims files you wa
 
 ![Demo](https://github.com/evarol/bovistitch/blob/master/fig_5.png)
 
+![Demo](https://github.com/evarol/bovistitch/blob/master/fig_3.png)
+
 Contributors: B. Rao, E. Varol
