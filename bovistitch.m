@@ -8,12 +8,13 @@ numiter=1;
 template='random';
 visual=1;
 %% adding dependencies
-selpath = uigetdir('Select imarisReader folder');
+disp('Select imarisReader folder...');
+selpath = uigetdir('[]','Select imarisReader folder');
 addpath(genpath(selpath));
 
 %% import files
-
-[file,path] = uigetfile('*.ims','MultiSelect','on');
+disp('Select ims files to stitch...');
+[file,path] = uigetfile('*.ims','Select ims files to stitch','MultiSelect','on');
 
 slice=-1;
 
