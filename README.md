@@ -1,7 +1,7 @@
 # bovistitch
 
 
-Tool to stitch and vignette correct multi slide images.
+Tool to stitch and vignette correct multi slide images using linearly approximated optimal transport.
 
 Requires the ImarisReader github repo from https://github.com/PeterBeemiller/ImarisReader
 
