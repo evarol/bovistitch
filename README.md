@@ -1,7 +1,7 @@
 # bovistitch
 
 
-Bovistitch is a tool to stitch and vignette correct multi slide images using linearly approximated optimal transport. There are no parameters to tune.
+Bovistitch is a tool to stitch and vignette correct multi slide images using linearly approximated optimal transport. There are no parameters to tune other than the granularity of histogram estimation.
 
 Requires the ImarisReader github repo from https://github.com/PeterBeemiller/ImarisReader
 
