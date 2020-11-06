@@ -4,7 +4,7 @@ close all
 
 %% parameters
 numbins=50;
-numiter=3;
+numiter=1;
 template='middle_slice';
 visual=1;
 %% adding dependencies
@@ -24,7 +24,7 @@ while 1==1
         disp('Loading slices...');
         for i=1:length(file)
             imsObj=ImarisReader([path file{i}]);
-            dataVolume(:,:,i)=imsObj.DataSet.GetDataSlice(slice,0,0);
+            dataVolume(:,:,i)=imsObj.DataSet.GetDataSlice(slice,1,0);
             position(:,i)=[imsObj.DataSet.ExtendMinX imsObj.DataSet.ExtendMaxX imsObj.DataSet.ExtendMinY imsObj.DataSet.ExtendMaxY];
         end
          disp('Loading slices...(done)');
@@ -50,7 +50,7 @@ while 1==1
         vignette_field_corrected=zeros(size(I));
         for i=1:size(dataVolume,3)
             I(position(1,i):position(2,i),position(3,i):position(4,i))=I(position(1,i):position(2,i),position(3,i):position(4,i))+imresize(dataVolume(:,:,i),size(I(position(1,i):position(2,i),position(3,i):position(4,i))));
-            Icorr(position(1,i):position(2,i),position(3,i):position(4,i))=Icorr(position(1,i):position(2,i),position(3,i):position(4,i))+imresize(vfield,size(I(position(1,i):position(2,i),position(3,i):position(4,i))));
+            Icorr(position(1,i):position(2,i),position(3,i):position(4,i))=Icorr(position(1,i):position(2,i),position(3,i):position(4,i))+imresize(dataVolume_corrected(:,:,i),size(I(position(1,i):position(2,i),position(3,i):position(4,i))));
             vignette_field(position(1,i):position(2,i),position(3,i):position(4,i))=vignette_field(position(1,i):position(2,i),position(3,i):position(4,i))+imresize(vfield,size(I(position(1,i):position(2,i),position(3,i):position(4,i))));
             vignette_field_corrected(position(1,i):position(2,i),position(3,i):position(4,i))=vignette_field_corrected(position(1,i):position(2,i),position(3,i):position(4,i))+imresize(vfield_corrected,size(I(position(1,i):position(2,i),position(3,i):position(4,i))));
             counts(position(1,i):position(2,i),position(3,i):position(4,i))=counts(position(1,i):position(2,i),position(3,i):position(4,i))+1;
