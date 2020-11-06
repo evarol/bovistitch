@@ -7,6 +7,8 @@ numbins=50;
 numiter=1;
 template='middle_slice';
 visual=1;
+
+channel=1;
 %% adding dependencies
 disp('Select imarisReader folder...');
 selpath = uigetdir('[]','Select imarisReader folder');
@@ -24,7 +26,7 @@ while 1==1
         disp('Loading slices...');
         for i=1:length(file)
             imsObj=ImarisReader([path file{i}]);
-            dataVolume(:,:,i)=imsObj.DataSet.GetDataSlice(slice,1,0);
+            dataVolume(:,:,i)=imsObj.DataSet.GetDataSlice(slice,channel,0);
             position(:,i)=[imsObj.DataSet.ExtendMinX imsObj.DataSet.ExtendMaxX imsObj.DataSet.ExtendMinY imsObj.DataSet.ExtendMaxY];
         end
          disp('Loading slices...(done)');
