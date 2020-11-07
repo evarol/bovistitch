@@ -29,7 +29,7 @@ while 1==1
             dataVolume(:,:,i)=imsObj.DataSet.GetDataSlice(slice,channel,0);
             position(:,i)=[imsObj.DataSet.ExtendMinX imsObj.DataSet.ExtendMaxX imsObj.DataSet.ExtendMinY imsObj.DataSet.ExtendMaxY];
         end
-         disp('Loading slices...(done)');
+        disp('Loading slices...(done)');
         %% vignette correction
         
         
@@ -68,6 +68,14 @@ while 1==1
         volume_corrected(:,:,slice+1)=Icorr; %% output bovi-stitched volume
         
         disp(['Stitching slice ' num2str(slice) ' (done)']);
+        
+        if ((slice-1)>=imsObj.DataSet.SizeZ)
+            disp('slices finished');
+            disp('Saving stitched + vignetted corrected volume');
+            save([path 'stitched_raw_volume.mat'],'volume_raw','vignette_field','vfield');
+            save([path 'bovistitched_volume.mat'],'volume_corrected','vignette_field_corrected','vfield_corrected');
+            disp('Saving stitched + vignetted corrected volume (done)');
+        end
     catch
         disp('slices finished');
         disp('Saving stitched + vignetted corrected volume');

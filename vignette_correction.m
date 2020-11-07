@@ -28,9 +28,9 @@ for k=1:numiter
     
     Xht=zeros(size(Xh));
     if strcmpi(templatetype,'middle_slice');
-        template=Xh(1024,:);
+        template=Xh(size(dataVolume,1)/2,:);
     elseif strcmpi(templatetype,'middle_20_slices');
-        template=vec(Xh(1024-10:1024+10,:))';
+        template=vec(Xh(size(dataVolume,1)/2-10:size(dataVolume,1)/2+10,:))';
     elseif strcmpi(templatetype,'random');
         r=randperm(numel(Xh));
         template=Xh(r(1:size(Xh,2)));
@@ -51,14 +51,14 @@ for k=1:numiter
     dataVolume=reshape(Xht,size(dataVolume));
     
     if visual==1
-        imagesc([imgaussfilt(max(dataVolume0,[],3),200) imgaussfilt(max(dataVolume,[],3),200)]);title('Left: uncorrected vignetting, Right: corrected vignetting');colormap(gray(256));drawnow
+        imagesc([imgaussfilt(max(dataVolume0,[],3),size(dataVolume,1)/10) imgaussfilt(max(dataVolume,[],3),size(dataVolume,1)/10)]);title('Left: uncorrected vignetting, Right: corrected vignetting');colormap(gray(256));drawnow
     end
-    Xv=reshape(permute(dataVolume,[2 1 3]),[2048],[])';
+    Xv=reshape(permute(dataVolume,[2 1 3]),[size(dataVolume,2)],[])';
     Xvt=zeros(size(Xv));
     if strcmpi(templatetype,'middle_slice');
-        template=Xv(:,1024);
+        template=Xv(:,size(dataVolume,2)/2);
     elseif strcmpi(templatetype,'middle_20_slices');
-        template=vec(Xv(:,1024-10:1024+10));
+        template=vec(Xv(:,size(dataVolume,2)/2-10:size(dataVolume,2)/2+10));
     elseif strcmpi(templatetype,'random');
         r=randperm(numel(Xv));
         template=Xv(r(1:size(Xv,2)));
@@ -81,12 +81,12 @@ for k=1:numiter
     dataVolume=permute(tmp,[2 1 3]);
     
     if visual==1
-        imagesc([imgaussfilt(max(dataVolume0,[],3),200) imgaussfilt(max(dataVolume,[],3),200)]);title('Left: uncorrected vignetting, Right: corrected vignetting');colormap(gray(256));drawnow
+        imagesc([imgaussfilt(max(dataVolume0,[],3),size(dataVolume,1)/10) imgaussfilt(max(dataVolume,[],3),size(dataVolume,1)/10)]);title('Left: uncorrected vignetting, Right: corrected vignetting');colormap(gray(256));drawnow
     end
 end
 
-vfield=imgaussfilt(max(dataVolume0,[],3),200);
-vfield_corrected=imgaussfilt(max(dataVolume,[],3),200);
+vfield=imgaussfilt(max(dataVolume0,[],3),size(dataVolume,1)/10);
+vfield_corrected=imgaussfilt(max(dataVolume,[],3),size(dataVolume,1)/10);
 end
 
 
