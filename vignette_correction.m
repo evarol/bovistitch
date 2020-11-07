@@ -1,4 +1,4 @@
-function [dataVolume,vfield,vfield_corrected]=vignette_correction(dataVolume,numbins,numiter,templatetype,visual,slice)
+function [dataVolume,vfield,vfield_corrected,S,D]=vignette_correction_v2(dataVolume,numbins,numiter,templatetype,visual,slice)
 
 vec=@(x)(x(:));
 if nargin<2
@@ -23,21 +23,22 @@ end
 if visual==1
     dataVolume0=dataVolume;
 end
+
 for k=1:numiter
     Xh=reshape(dataVolume,[size(dataVolume,1)],[]);
     
     Xht=zeros(size(Xh));
     if strcmpi(templatetype,'middle_slice');
-        template=Xh(size(dataVolume,1)/2,:);
+        template=Xh(round(size(dataVolume,1)/2),:);
     elseif strcmpi(templatetype,'middle_20_slices');
-        template=vec(Xh(size(dataVolume,1)/2-10:size(dataVolume,1)/2+10,:))';
+        template=vec(Xh(round(size(dataVolume,1)/2)-10:round(size(dataVolume,1)/2)+10,:))';
     elseif strcmpi(templatetype,'random');
         r=randperm(numel(Xh));
         template=Xh(r(1:size(Xh,2)));
     end
     tic
     for i=1:size(Xh,1)
-        Xht(i,:)=linhistmatch(Xh(i,:),template,numbins,'regular');
+        [Xht(i,:),~,Bh(i,:)]=linhistmatch(Xh(i,:),template,numbins,'regular');
         clc
         fprintf(['Slice ' num2str(slice) ' Horizontal vignette correction progress (round ' num2str(k) '/' num2str(numiter) '):\n']);
         fprintf(['\n' repmat('.',1,50) '\n\n'])
@@ -48,24 +49,26 @@ for k=1:numiter
         disp(['Time elapsed (minutes): ' num2str(T/60) ' Time remaining (minutes): ' num2str((size(Xh,1)-i)*(T/i)*(1/60))]);
     end
     
+    S{k,1}=Bh(:,1);D{k,1}=Bh(:,2);
+    
     dataVolume=reshape(Xht,size(dataVolume));
     
     if visual==1
-        imagesc([imgaussfilt(max(dataVolume0,[],3),size(dataVolume,1)/10) imgaussfilt(max(dataVolume,[],3),size(dataVolume,1)/10)]);title('Left: uncorrected vignetting, Right: corrected vignetting');colormap(gray(256));drawnow
+        imagesc([imgaussfilt(max(dataVolume0,[],3),size(dataVolume,1)/5) imgaussfilt(max(dataVolume,[],3),size(dataVolume,1)/5)]);title('Left: uncorrected vignetting, Right: corrected vignetting');colormap(gray(256));drawnow
     end
     Xv=reshape(permute(dataVolume,[2 1 3]),[size(dataVolume,2)],[])';
     Xvt=zeros(size(Xv));
     if strcmpi(templatetype,'middle_slice');
-        template=Xv(:,size(dataVolume,2)/2);
+        template=Xv(:,round(size(dataVolume,2)/2));
     elseif strcmpi(templatetype,'middle_20_slices');
-        template=vec(Xv(:,size(dataVolume,2)/2-10:size(dataVolume,2)/2+10));
+        template=vec(Xv(:,round(size(dataVolume,2)/2)-10:round(size(dataVolume,2)/2)+10));
     elseif strcmpi(templatetype,'random');
         r=randperm(numel(Xv));
         template=Xv(r(1:size(Xv,2)));
     end
     tic
     for i=1:size(Xv,2)
-        Xvt(:,i)=linhistmatch(Xv(:,i),template,numbins,'regular');
+        [Xvt(:,i),~,Bv(:,i)]=linhistmatch(Xv(:,i),template,numbins,'regular');
         clc
         fprintf(['Slice ' num2str(slice) ' Vertical vignette correction progress (round ' num2str(k) '/' num2str(numiter) '):\n']);
         fprintf(['\n' repmat('.',1,50) '\n\n'])
@@ -76,21 +79,22 @@ for k=1:numiter
         disp(['Time elapsed (minutes): ' num2str(T/60) ' Time remaining (minutes): ' num2str((size(Xv,2)-i)*(T/i)*(1/60))]);
     end
     
+    S{k,2}=Bv(1,:);D{k,2}=Bv(2,:);
     tmp=reshape(Xvt',size(dataVolume));
     
     dataVolume=permute(tmp,[2 1 3]);
     
     if visual==1
-        imagesc([imgaussfilt(max(dataVolume0,[],3),size(dataVolume,1)/10) imgaussfilt(max(dataVolume,[],3),size(dataVolume,1)/10)]);title('Left: uncorrected vignetting, Right: corrected vignetting');colormap(gray(256));drawnow
+        imagesc([imgaussfilt(max(dataVolume0,[],3),size(dataVolume,1)/5) imgaussfilt(max(dataVolume,[],3),size(dataVolume,1)/5)]);title('Left: uncorrected vignetting, Right: corrected vignetting');colormap(gray(256));drawnow
     end
 end
 
-vfield=imgaussfilt(max(dataVolume0,[],3),size(dataVolume,1)/10);
-vfield_corrected=imgaussfilt(max(dataVolume,[],3),size(dataVolume,1)/10);
+vfield=imgaussfilt(max(dataVolume0,[],3),size(dataVolume,1)/5);
+vfield_corrected=imgaussfilt(max(dataVolume,[],3),size(dataVolume,1)/5);
 end
 
 
-function [atransform,distance]=linhistmatch(a,b,nbins,type)
+function [atransform,distance,beta]=linhistmatch(a,b,nbins,type)
 %takes as input two traces a (moving), b (reference) and outputs normalized
 %trace atransform that has a similar histogram as b
 %input : a - moving time series

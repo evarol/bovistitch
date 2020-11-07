@@ -75,6 +75,7 @@ while 1==1
             save([path 'stitched_raw_volume.mat'],'volume_raw','vignette_field','vfield');
             save([path 'bovistitched_volume.mat'],'volume_corrected','vignette_field_corrected','vfield_corrected');
             disp('Saving stitched + vignetted corrected volume (done)');
+            break
         end
     catch
         disp('slices finished');
