@@ -27,4 +27,6 @@ Examples:
 
 ![Demo](https://github.com/evarol/bovistitch/blob/master/fig_5.png)
 
+![Demo](https://github.com/evarol/bovistitch/blob/master/fig_6.png)
+
 Contributors: B. Rao, E. Varol
