@@ -21,12 +21,12 @@ Examples:
 ![Demo](https://github.com/evarol/bovistitch/blob/master/fig_3.png)
 
 
-2x2 FOV x 483 z-slices (z-maximum projection view):
+2x2 FOV x 483 z-slices:
 
-![Demo](https://github.com/evarol/bovistitch/blob/master/fig_4.png)
+![Demo](https://github.com/evarol/bovistitch/blob/master/fig_6.png)
 
 ![Demo](https://github.com/evarol/bovistitch/blob/master/fig_5.png)
 
-![Demo](https://github.com/evarol/bovistitch/blob/master/fig_6.png)
+
 
 Contributors: B. Rao, E. Varol
