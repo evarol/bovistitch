@@ -1,28 +1,32 @@
-function [dataVolume,vfield,vfield_corrected,S,D]=vignette_correction_v2(dataVolume,numbins,numiter,templatetype,visual,slice)
+function [dataVolume,vfield,vfield_corrected,S,D]=vignette_correction(dataVolume,numbins,numiter,templatetype,visual,slice)
 
 vec=@(x)(x(:));
 if nargin<2
+    slice=0;
     numbins=20;
     numiter=1;
     templatetype='middle_slice';
     visual=0;
 end
 if nargin<3
+    slice=0;
     numiter=1;
     templatetype='middle_slice';
     visual=0;
 end
 if nargin<4
+    slice=0;
     templatetype='middle_slice';
     visual=0;
 end
 if nargin<5
+    slice=0;
     visual=0;
 end
 
-if visual==1
+% if visual==1
     dataVolume0=dataVolume;
-end
+% end
 
 for k=1:numiter
     Xh=reshape(dataVolume,[size(dataVolume,1)],[]);
